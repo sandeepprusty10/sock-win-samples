@@ -27,7 +27,9 @@ int main()
 	struct sockaddr_in serv_addr; 
 	const char *hello = "Hello from client"; 
 	char buffer[1024] = {0}; 
-
+	char cert_buffer[1024] = {0};
+	string official = "Certified";
+	
 	initWinSock();
 
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
@@ -51,9 +53,15 @@ int main()
 		printf("\nConnection Failed \n"); 
 		return -1; 
 	} 
-	send(sock , hello , strlen(hello) , 0 ); 
-	printf("Hello message sent\n"); 
-	recv( sock , buffer, 1024, 0); 
-	printf("Received: %s\n",buffer ); 
+	
+	//Receive certificate from sender and verify
+	recv(sock, cert_buffer, 1024, 0);
+	if(cert_buffer == official)
+	{
+		send(sock , hello , strlen(hello) , 0 ); 
+		printf("Hello message sent\n"); 
+		recv( sock , buffer, 1024, 0); 
+		printf("Received: %s\n",buffer );
+	}
 	return 0; 
 } 
