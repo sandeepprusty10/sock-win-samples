@@ -32,7 +32,14 @@ int main()
 	const char *hello = "Hello from server"; 
 	
 	initWinSock();
-
+	
+	struct certificate
+	{
+	    	const char* name = "Certified";
+		int hash;
+	};
+	
+	certificate c1;
 	// Create socket descriptor 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
 	{ 
@@ -64,6 +71,9 @@ int main()
 		perror("accept"); 
 		exit(EXIT_FAILURE); 
 	} 
+	//Send certificate to client
+	send(new_socket, c1.name, strlen(c1.name), 0);
+	
 	printf("Waiting for data...\n");
 	recv( new_socket , buffer, 1024, 0); 
 	printf("Received: %s\n",buffer ); 
